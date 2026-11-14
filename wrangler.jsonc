@@ -1,0 +1,16 @@
+{
+  // Cloudflare Workers Static Assets 配置
+  // 静态资源请求免费且不限流量（Workers 免费层额度只统计动态请求）
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "ewm-qr",
+  "compatibility_date": "2026-11-01",
+  "assets": {
+    "directory": "./dist",
+    // 未命中时回落到 index.html，便于未来加 SPA 路由
+    "not_found_handling": "404-page",
+    "html_handling": "auto-trailing-slash"
+  },
+  // 纯静态站点，不需要任何 KV / D1 / R2 绑定。
+  // 若后续要加短链统计，再取消下面两行注释：
+  // "kv_namespaces": [{ "binding": "QR_STATS", "id": "<你的 namespace id>" }]
+}

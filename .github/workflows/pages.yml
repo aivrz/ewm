@@ -1,0 +1,56 @@
+# 备选方案：直接部署到 GitHub Pages（完全免费，无需任何 Token）
+#
+# 启用方式：
+#   1. 仓库 Settings → Pages → Build and deployment → Source 选 "GitHub Actions"
+#   2. 把本文件里的 workflow 名从 deploy-pages 改成 deploy-pg（避免与 Cloudflare 的重名）
+#   3. 推送触发
+#
+# 注意：Cloudflare 与 GitHub Pages 两套工作流可同时存在，但 Cloudflare 的
+# deploy.yml 里的 `needs: build` 依赖同名 job，故建议只启用其一。
+
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+      - run: npm run build
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy-pages:
+    name: Deploy
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

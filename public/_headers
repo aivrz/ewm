@@ -1,0 +1,18 @@
+# Cloudflare Workers Static Assets / Pages 通用响应头
+# 放置位置：public/_headers，构建后自动复制到 dist/_headers
+
+/*
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: blob:; connect-src 'self'; font-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: geolocation=(), microphone=(), camera=(), interest-cohort=()
+  Cross-Origin-Opener-Policy: same-origin
+  X-Frame-Options: DENY
+
+# 带哈希的静态资源可长期缓存
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# HTML 不缓存，保证更新即时生效
+/*.html
+  Cache-Control: public, max-age=0, must-revalidate

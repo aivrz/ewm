@@ -1,0 +1,29 @@
+{
+  "name": "ewm",
+  "private": true,
+  "version": "2.0.0",
+  "type": "module",
+  "description": "现代化纯前端二维码生成器：保留 ewm 全部美化能力，去除 eval/Packer 压缩，可部署到 Cloudflare 静态托管",
+  "license": "MIT",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "test": "node --experimental-strip-types scripts/selftest.mjs",
+    "test:decode": "node --experimental-strip-types scripts/verify-decode.mjs",
+    "verify": "npm run typecheck && npm run test && npm run test:decode && npm run build"
+  },
+  "dependencies": {
+    "qrcode-generator": "^2.0.4"
+  },
+  "devDependencies": {
+    "jsqr": "^1.4.0",
+    "pngjs": "^7.0.0",
+    "typescript": "^5.9.3",
+    "vite": "^7.3.8"
+  },
+  "engines": {
+    "node": ">=20.6.0"
+  }
+}
